@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Vehículos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 1rem;
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            padding: 1rem;
+        }
+        
+        .btn-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-floating:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .vehicle-specs {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .vehicle-specs li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .vehicle-specs li i {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            color: var(--secondary-color);
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">🚗 Sistema de Gestión de Vehículos</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3 id="total-vehiculos">0</h3>
+                    <p>Vehículos Registrados</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3 id="total-mecanicos">0</h3>
+                    <p>Mecánicos Disponibles</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3>24/7</h3>
+                    <p>Servicio Disponible</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehículos -->
+        <h2 class="section-title">Vehículos Disponibles</h2>
+        <div class="row" id="vehiculos-container"></div>
+
+        <!-- Mecánicos -->
+        <h2 class="section-title mt-5">Nuestros Mecánicos</h2>
+        <div class="row" id="mecanicos-container"></div>
+    </div>
+
+    <!-- Botón Flotante -->
+    <a href="#" class="btn-floating" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <!-- Modal Agregar Vehículo -->
+    <div class="modal fade" id="addVehicleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Nuevo Vehículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vehicleForm">
+                        <div class="mb-3">
+                            <label class="form-label">Marca</label>
+                            <input type="text" class="form-control" name="marca" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kilometraje</label>
+                            <input type="text" class="form-control" name="kilometraje">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Combustible</label>
+                            <select class="form-control" name="tipo_combustible">
+                                <option value="Eléctrico">Eléctrico</option>
+                                <option value="Gasolina">Gasolina</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Híbrido">Híbrido</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Caballos de Fuerza</label>
+                            <input type="text" class="form-control" name="caballos">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Torque</label>
+                            <input type="text" class="form-control" name="torque">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Segmento</label>
+                            <select class="form-control" name="segmento">
+                                <option value="Premium">Premium</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Compacto">Compacto</option>
+                                <option value="Subcompacto">Subcompacto</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Guardar Vehículo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Mecánico -->
+    <div class="modal fade" id="addMechanicModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Nuevo Mecánico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="mechanicForm">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Guardar Mecánico</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cargar los vehículos
+        async function cargarVehiculos() {
+            try {
+                const response = await fetch('/vehiculos');
+                const vehiculos = await response.json();
+                const container = document.getElementById('vehiculos-container');
+                container.innerHTML = ''; // Limpiar contenedor
+                
+                document.getElementById('total-vehiculos').textContent = vehiculos.length;
+                
+                vehiculos.forEach(v => {
+                    const card = document.createElement('div');
+                    card.className = 'col-md-4 mb-4';
+                    card.innerHTML = `
+                        <div class="card">
+                            <div class="card-header">
+                                ${v.marca} ${v.modelo}
+                            </div>
+                            <div class="card-body">
+                                <ul class="vehicle-specs">
+                                    <li><i class="fas fa-tag"></i> ${v.segmento}</li>
+                                    <li><i class="fas fa-gas-pump"></i> ${v.tipo_combustible}</li>
+                                    <li><i class="fas fa-horse"></i> ${v.caballos}</li>
+                                    <li><i class="fas fa-cog"></i> ${v.torque}</li>
+                                    <li><i class="fas fa-road"></i> ${v.kilometraje}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error al cargar vehículos:', error);
+            }
+        }
+
+        // Función para cargar los mecánicos
+        async function cargarMecanicos() {
+            try {
+                const response = await fetch('/mecanicos');
+                const mecanicos = await response.json();
+                const container = document.getElementById('mecanicos-container');
+                container.innerHTML = ''; // Limpiar contenedor
+                
+                document.getElementById('total-mecanicos').textContent = mecanicos.length;
+                
+                mecanicos.forEach(m => {
+                    const card = document.createElement('div');
+                    card.className = 'col-md-3 mb-4';
+                    card.innerHTML = `
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-user-cog fa-3x text-secondary"></i>
+                                </div>
+                                <h5 class="card-title">${m.nombre} ${m.apellido}</h5>
+                                <p class="card-text">Mecánico Especializado</p>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error al cargar mecánicos:', error);
+            }
+        }
+
+        // Función para agregar un nuevo vehículo
+        document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const vehicleData = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/vehiculos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(vehicleData),
+                });
+                
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('addVehicleModal')).hide();
+                    e.target.reset();
+                    cargarVehiculos();
+                } else {
+                    alert('Error al guardar el vehículo');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al guardar el vehículo');
+            }
+        });
+
+        // Función para agregar un nuevo mecánico
+        document.getElementById('mechanicForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const mechanicData = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/mecanicos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(mechanicData),
+                });
+                
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('addMechanicModal')).hide();
+                    e.target.reset();
+                    cargarMecanicos();
+                } else {
+                    alert('Error al guardar el mecánico');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al guardar el mecánico');
+            }
+        });
+
+        // Cargar datos cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarVehiculos();
+            cargarMecanicos();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

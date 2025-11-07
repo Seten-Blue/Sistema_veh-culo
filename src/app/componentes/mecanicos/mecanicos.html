@@ -1,0 +1,13 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-3">Lista de Mecánicos</h2>
+
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let m of mecanicos">
+      <div class="card shadow-sm p-3">
+        <h5>{{ m.nombre }}</h5>
+        <p class="text-muted">Especialidad: {{ m.especialidad }}</p>
+        <p>Teléfono: {{ m.telefono }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="container py-5 text-light position-relative" style="z-index: 1;">
+  <h1 class="text-center mb-5 fw-bold display-5">{{titulo}}</h1>
+
+  <!-- Vehículos -->
+  <section class="dashboard-section mb-5 p-4 rounded-4 shadow-lg bg-dark bg-opacity-75">
+    <h2 class="section-title mb-4 text-info text-center">Vehículos Disponibles 🚗</h2>
+    <app-vehiculos></app-vehiculos>
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-info rounded-pill px-4" (click)="abrirModal('vehiculo')">
+        ➕ Agregar Vehículo
+      </button>
+    </div>
+  </section>
+
+  <!-- Mecánicos -->
+  <section class="dashboard-section mb-5 p-4 rounded-4 shadow-lg bg-dark bg-opacity-75">
+    <h2 class="section-title mb-4 text-success text-center">Mecánicos Disponibles 👷‍♂️</h2>
+    <app-mecanicos></app-mecanicos>
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-success rounded-pill px-4" (click)="abrirModal('mecanico')">
+        🧰 Agregar Mecánico
+      </button>
+    </div>
+  </section>
+
+  <!-- Asignaciones -->
+  <section class="dashboard-section p-4 rounded-4 shadow-lg bg-dark bg-opacity-75">
+    <h2 class="section-title mb-4 text-warning text-center">Asignaciones 🛠️</h2>
+    <app-asignaciones></app-asignaciones>
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-warning rounded-pill px-4" (click)="abrirModal('asignacion')">
+        🔄 Nueva Asignación
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- MODALES ANGULAR -->
+<div #modalVehiculo class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Vehículo</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal('vehiculo')"></button>
+      </div>
+      <div class="modal-body">
+        <input [(ngModel)]="nuevoVehiculo.marca" class="form-control mb-2" placeholder="Marca">
+        <input [(ngModel)]="nuevoVehiculo.modelo" class="form-control mb-2" placeholder="Modelo">
+        <input [(ngModel)]="nuevoVehiculo.anio" class="form-control" placeholder="Año">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModal('vehiculo')">Cancelar</button>
+        <button class="btn btn-success" (click)="agregarVehiculo()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #modalMecanico class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Mecánico</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal('mecanico')"></button>
+      </div>
+      <div class="modal-body">
+        <input [(ngModel)]="nuevoMecanico.nombre" class="form-control mb-2" placeholder="Nombre">
+        <input [(ngModel)]="nuevoMecanico.apellido" class="form-control" placeholder="Apellido">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModal('mecanico')">Cancelar</button>
+        <button class="btn btn-success" (click)="agregarMecanico()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>  
+
+<div #modalAsignacion class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Asignar Mecánico a Vehículo</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal('asignacion')"></button>
+      </div>
+      <div class="modal-body">
+        <input [(ngModel)]="nuevaAsignacion.id_mecanico" class="form-control mb-2" placeholder="ID Mecánico">
+        <input [(ngModel)]="nuevaAsignacion.id_vehiculo" class="form-control" placeholder="ID Vehículo">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModal('asignacion')">Cancelar</button>
+        <button class="btn btn-success" (click)="agregarAsignacion()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

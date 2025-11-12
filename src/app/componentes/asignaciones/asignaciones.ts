@@ -12,7 +12,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class Asignaciones implements OnInit {
   asignaciones: any[] = [];
-  nuevaAsignacion = { id_mecanico: '', id_vehiculo: '' };
+  // Añadimos los campos que aparecen en el modal
+  nuevaAsignacion = { 
+    id_mecanico: '', 
+    id_vehiculo: '', 
+    descripcion: '', 
+    estado: '' 
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -26,10 +32,17 @@ export class Asignaciones implements OnInit {
   }
 
   agregarAsignacion() {
+    if (!this.nuevaAsignacion.id_mecanico || !this.nuevaAsignacion.id_vehiculo) {
+      alert('Completa los campos de ID Mecánico y Vehículo');
+      return;
+    }
+
     this.http.post('http://localhost:8000/asignaciones', this.nuevaAsignacion)
       .subscribe(() => {
         this.cargarAsignaciones();
-        this.nuevaAsignacion = { id_mecanico: '', id_vehiculo: '' };
+        // Reiniciamos todos los campos
+        this.nuevaAsignacion = { id_mecanico: '', id_vehiculo: '', descripcion: '', estado: '' };
       });
   }
+  
 }

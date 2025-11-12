@@ -1,53 +1,18 @@
-<div class="container mt-5">
-  <h2 class="section-title">Asignaciones 🛠️</h2>
-
-  <div class="table-responsive">
-    <table class="table table-dark table-hover rounded-4">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>ID Mecánico</th>
-          <th>ID Vehículo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let a of asignaciones">
-          <td>{{ a.id }}</td>
-          <td>{{ a.id_mecanico }}</td>
-          <td>{{ a.id_vehiculo }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Botón para abrir modal -->
-  <button class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#modalAsignacion">
-    🔄 Nueva Asignación
-  </button>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="modalAsignacion" tabindex="-1" aria-labelledby="modalAsignacionLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAsignacionLabel">Asignar Mecánico a Vehículo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label>ID Mecánico:</label>
-          <input [(ngModel)]="nuevaAsignacion.id_mecanico" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label>ID Vehículo:</label>
-          <input [(ngModel)]="nuevaAsignacion.id_vehiculo" class="form-control" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn btn-success" (click)="agregarAsignacion()" data-bs-dismiss="modal">Guardar</button>
-      </div>
-    </div>
-  </div>
-</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID Mecánico</th>
+      <th>ID Vehículo</th>
+      <th>Descripción</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let asignacion of asignaciones">
+      <td>{{asignacion.id_mecanico}}</td>
+      <td>{{asignacion.id_vehiculo}}</td>
+      <td>{{asignacion.descripcion}}</td>
+      <td>{{asignacion.estado}}</td>
+    </tr>
+  </tbody>
+</table>
